@@ -33,7 +33,7 @@ rules[0] = {
 
 rules[1] = {
   a: "X",
-  
+
   b: "F-[[X]+X]+F[+FX]-X"
 }
 
@@ -94,9 +94,9 @@ function turtle() {
       line(0, 0, 0, -len);
       translate(0, -len);
     } else if (current == "+") {
-      rotate(angleRad);
-    } else if (current == "-") {
       rotate(-angleRad);
+    } else if (current == "-") {
+      rotate(angleRad);
     } else if (current == "[") {
       push();
     } else if (current == "]") {
@@ -167,14 +167,31 @@ function updateLength() {
 
 
 function saveImage() {
+  var txtSpace = "     ";
+  var txtLeft = "";
+  var txtRight = "";
 
   // textFont(font);
   textSize(fontsize);
-  textAlign(LEFT);
   fill(255);
-  text("n: " + genN + "     δ: " + angleDeg + "º     " + "ω: " + axiom + "     l: " + startLength , 20, height - fontsize - 5);
+
+  textAlign(LEFT);
+  txtLeft = "n: " + genN + txtSpace;
+  txtLeft += "δ: " + angleDeg + "º" + txtSpace;
+  txtLeft += "ω: " + axiom + txtSpace;
+  txtLeft += "l: " + startLength + txtSpace;
+  text(txtLeft, 20, height - fontsize - 5);
+
+  // text("n: " + genN + "     δ: " + angleDeg + "º     " + "ω: " + axiom + "     l: " + startLength, 20, height - fontsize - 5);
+  
   textAlign(RIGHT);
-  text("p: F → " + rules[0].b, width - 20, height - fontsize - 5)
+  txtRight = "p: ";
+  for (var i = 0; i < rules.length; i++) {
+    txtRight += txtSpace + rules[i].a + " → " + rules[i].b;
+  }
+  text(txtRight, width - 20, height - fontsize - 5);
+
+  // text("p: F → " + rules[0].b, width - 20, height - fontsize - 5)
 
   saveCanvas(canvas, 'fractal', 'jpg');
 
