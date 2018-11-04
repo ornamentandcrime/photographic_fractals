@@ -8,23 +8,109 @@
   <link rel="stylesheet" type="text/css" href="style.css">
   <meta charset="utf-8" />
 
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    /* Style the header */
+    header {
+      background-color: rgb(39, 39, 39);
+      padding: 8px;
+      text-align: center;
+      font-size: 18px;
+      color: green;
+    }
+
+    /* Create two columns/boxes that floats next to each other */
+    nav {
+      float: left;
+      width: 30%;
+
+      background: rgb(66, 66, 66);
+      padding: 20px;
+      color: white;
+      text-align: center;
+
+    }
+
+    /* Style the list inside the menu */
+    nav ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    article {
+      float: right;
+      padding: 20px;
+      width: 70%;
+      background-color: #585858;
+
+    }
+
+    /* Clear floats after the columns */
+    section:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+
+    /* Style the footer */
+    footer {
+      background-color: #777;
+      padding: 10px;
+      text-align: center;
+      color: white;
+      width: 100%;
+    }
+
+    /* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+    @media (max-width: 600px) {
+
+      nav,
+      article {
+        width: 100%;
+        height: auto;
+      }
+    }
+  </style>
+
+
+
+
 </head>
 
 <body>
   <script src="sketch.js"></script>
-  <h1> L-System Fractal Tree </h1>
-  <p> Click canvas to generate. Refresh page to start again. </p>
-  <style>
-    p {
-      color: green;
-      padding: 12px;
-    }
 
-    h1 {
-      color: green;
-      padding: 12px;
-    }
-  </style>
+  <header>
+    <h1> L-System Fractal Tree </h1>
+
+  </header>
+
+  <section>
+    <nav>
+      <p style="color:green;">
+        Set parameters below and click 're-initialise' to restart the fractal model.
+      </p>
+      <p id="navLeft"> </p>
+
+    </nav>
+
+
+    <article>
+      <p id="canvasp"> </p>
+
+    </article>
+
+  </section>
+
+
 </body>
 
 </html>

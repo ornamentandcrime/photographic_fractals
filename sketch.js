@@ -1,21 +1,31 @@
-var axiom = "X";
+var axiom = "FX";
 var sentence = axiom;
 var restartButton;
 var saveButton;
 var canvas
 
-var angleDeg = 22.5;
+var lblAngle;
+var angleDeg = 45;
 var angleRad;
+var angleBox;
+
 var genN;
 
-var angleBox;
+var lblAxiom;
 var axiomBox;
-var tranformBox;
-var lengthBox;
 
-var startLength = 200;
+var lblTransform = [];
+var transformBox = [];
+
+var lblLength;
+var lengthBox;
+var startLength = 230;
 var len = startLength;
+
 var transp = 255;
+
+var lblLog;
+var lblBlank;
 
 var rules = [];
 
@@ -34,7 +44,8 @@ rules[0] = {
 rules[1] = {
   a: "X",
 
-  b: "F-[[X]+X]+F[+FX]-X"
+  // b: "F-[[X]+X]+F[+FX]-X"
+  b: "F+[[X]-X]-F[-FX]+X"
 }
 
 function preload() {
@@ -43,7 +54,7 @@ function preload() {
   // font = loadFont('Opus Chords.otf');
 
   // load image
-  photo = loadImage('images/volker_ketteniss_004.jpg');
+  photo = loadImage('images/volker_ketteniss_007.jpg');
 
 
 }
@@ -52,11 +63,12 @@ function preload() {
 
 function generate() {
   len *= 0.5;
-  transp *= 0.7;
-  genN += 1;
+  transp *= 0.85;
+
 
   if (len > 3) {
     var nextSentence = "";
+    genN += 1;
     for (var i = 0; i < sentence.length; i++) {
       var current = sentence.charAt(i);
       var found = false;
@@ -111,15 +123,17 @@ function initFractal() {
 
   angleDeg = angleBox.value();
   angleRad = radians(angleDeg);
+  startLength = lengthBox.value();
   len = startLength;
 
   transp = 255;
 
   axiom = axiomBox.value();
-  createP(axiomBox.value());
   sentence = axiom;
-  rules[0].b = transformBox.value();
-  createP(transformBox.value());
+  for (var i = 0; i < rules.length; i++) {
+    rules[i].b = transformBox[i].value();
+    createP(transformBox[i].value());
+  }
 
 
   createP(axiom);
@@ -132,28 +146,49 @@ function initFractal() {
 function setup() {
 
   canvas = createCanvas(photo.width / 2, photo.height / 2);
+  canvas.parent('canvasp');
   canvas.mousePressed(generate);
 
-  createP("Angle δ:");
+  lblAngle = createP("Angle δ:");
+  lblAngle.parent("navLeft");
   angleBox = createInput(angleDeg);
+  angleBox.parent('navLeft');
 
-  createP("Start Length:");
+  lblLength = createP("Start Length:");
+  lblLength.parent("navLeft");
   lengthBox = createInput(startLength);
-  lengthBox.changed(updateLength);
+  lengthBox.parent("navLeft");
 
-  createP("Axiom ω:");
+  lblAxiom = createP("Axiom ω:");
+  lblAxiom.parent("navLeft");
   axiomBox = createInput(axiom);
+  axiomBox.parent("navLeft");
 
-  createP("Transformation p:");
-  transformBox = createInput(rules[0].b);
+  for (var i = 0; i < rules.length; i++) {
+    lblTransform[i] = createP("p" + (i + 1) + ": " + rules[i].a + " → ");
+    lblTransform[i].parent("navLeft");
+    transformBox[i] = createInput(rules[i].b);
+    transformBox[i].parent("navLeft");
+  }
 
-  createP();
+  lblBlank = createP(" ");
+  lblBlank.parent("navLeft");
 
-  restartButton = createButton("Restart Fractal");
+  restartButton = createButton("Re-initialise Model");
+  restartButton.parent("navLeft");
+  restartButton.style('font-size', '16px');
   restartButton.mousePressed(initFractal);
 
+  lblBlank = createP(" ");
+  lblBlank.parent("navLeft");
+  lblBlank = createP(" ");
+  lblBlank.parent("navLeft");
+
   saveButton = createButton("Save Image");
+  saveButton.parent("navLeft");
+  saveButton.style('font-size', '16px');
   saveButton.mousePressed(saveImage);
+  // saveButton.width()
 
   background(25);
   angleRad = radians(angleDeg);
@@ -161,9 +196,9 @@ function setup() {
   initFractal();
 }
 
-function updateLength() {
-  startLength = lengthBox.value();
-}
+// function updateLength() {
+//   startLength = lengthBox.value();
+// }
 
 
 function saveImage() {
@@ -183,11 +218,10 @@ function saveImage() {
   text(txtLeft, 20, height - fontsize - 5);
 
   // text("n: " + genN + "     δ: " + angleDeg + "º     " + "ω: " + axiom + "     l: " + startLength, 20, height - fontsize - 5);
-  
+
   textAlign(RIGHT);
-  txtRight = "p: ";
   for (var i = 0; i < rules.length; i++) {
-    txtRight += txtSpace + rules[i].a + " → " + rules[i].b;
+    txtRight += txtSpace + "p" + (i + 1) + ": " + rules[i].a + " → " + rules[i].b;
   }
   text(txtRight, width - 20, height - fontsize - 5);
 
