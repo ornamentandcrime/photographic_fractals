@@ -1,3 +1,7 @@
+var origX = 0.5;
+var origXInput;
+var origY = 1;
+var origYInput;
 var axiom = "FX";
 var sentence = axiom;
 var restartButton;
@@ -7,22 +11,27 @@ var canvas
 var lblAngle;
 var angleDeg = 45;
 var angleRad;
-var angleBox;
+var angleInput;
 
 var genN;
+var turtleCount;
 
 var lblAxiom;
-var axiomBox;
+var axiomInput;
 
 var lblTransform = [];
 var transformBox = [];
 
-var lblLength;
-var lengthBox;
+
+var lengthInput;
 var startLength = 230;
 var len = startLength;
+var dimLength = 0.5; // decrement of step length n+1
+var dimLenInput;
 
 var transp = 255;
+var dimTransp = 0.85;
+var dimTranspInput;
 
 var lblLog;
 var lblBlank;
@@ -53,7 +62,7 @@ function preload() {
   // is loaded before setup() and draw() are called
   // font = loadFont('Opus Chords.otf');
 
-  // load image
+  // load background image
   photo = loadImage('images/volker_ketteniss_007.jpg');
 
 
@@ -62,13 +71,15 @@ function preload() {
 
 
 function generate() {
-  len *= 0.5;
-  transp *= 0.85;
+  len *= dimLength;
+  transp *= dimTransp;
 
 
   if (len > 3) {
     var nextSentence = "";
     genN += 1;
+    turtleCount.html("🐢", true);
+
     for (var i = 0; i < sentence.length; i++) {
       var current = sentence.charAt(i);
       var found = false;
@@ -95,7 +106,10 @@ function generate() {
 
 function turtle() {
   // background(0);
-  translate(width / 2, height);
+  origX = origXInput.value();
+  origY = origYInput.value();
+
+  translate(floor(width * origX), floor(height * origY));
 
   for (var i = 0; i < sentence.length; i++) {
     var n = 0.0
@@ -104,6 +118,8 @@ function turtle() {
       n = noise(i);
       stroke(n * 255, 255 - n * 200, random(100), transp);
       line(0, 0, 0, -len);
+      translate(0, -len);
+    } else if (current == "f") {
       translate(0, -len);
     } else if (current == "+") {
       rotate(-angleRad);
@@ -121,14 +137,15 @@ function initFractal() {
   background(25);
   image(photo, 0, 0, width, height);
 
-  angleDeg = angleBox.value();
+  angleDeg = angleInput.value();
   angleRad = radians(angleDeg);
-  startLength = lengthBox.value();
+  startLength = lengthInput.value();
   len = startLength;
+  dimLength = dimLenInput.value();
 
   transp = 255;
 
-  axiom = axiomBox.value();
+  axiom = axiomInput.value();
   sentence = axiom;
   for (var i = 0; i < rules.length; i++) {
     rules[i].b = transformBox[i].value();
@@ -139,6 +156,7 @@ function initFractal() {
   createP(axiom);
   turtle();
   genN = 0;
+  turtleCount.html("L-System Fractal Tree ");
 
 }
 
@@ -149,46 +167,47 @@ function setup() {
   canvas.parent('canvasp');
   canvas.mousePressed(generate);
 
-  lblAngle = createP("Angle δ:");
-  lblAngle.parent("navLeft");
-  angleBox = createInput(angleDeg);
-  angleBox.parent('navLeft');
+  turtleCount = select('#turtles');
+  turtleCount.html("L-System Fractal Tree ");
 
-  lblLength = createP("Start Length:");
-  lblLength.parent("navLeft");
-  lengthBox = createInput(startLength);
-  lengthBox.parent("navLeft");
+  origXInput = select('#origX');
+  origXInput.value(origX);
+  origYInput = select('#origY');
+  origYInput.value(origY);
 
-  lblAxiom = createP("Axiom ω:");
-  lblAxiom.parent("navLeft");
-  axiomBox = createInput(axiom);
-  axiomBox.parent("navLeft");
+  angleInput = select('#rotAngle');
+  angleInput.value(angleDeg);
+
+  lengthInput = select('#Length');
+  lengthInput.value(startLength);
+  dimLenInput = select("#dimLength");
+  dimLenInput.value(dimLength);
+  dimTranspInput = select("#dimTransp");
+  dimTranspInput.value(dimTransp);
+
+  axiomInput = select('#axiom');
+  axiomInput.value(axiom);
 
   for (var i = 0; i < rules.length; i++) {
-    lblTransform[i] = createP("p" + (i + 1) + ": " + rules[i].a + " → ");
+    lblTransform[i] = createElement("label", "p" + (i + 1) + ": " + rules[i].a + " → ");
     lblTransform[i].parent("navLeft");
     transformBox[i] = createInput(rules[i].b);
     transformBox[i].parent("navLeft");
   }
 
-  lblBlank = createP(" ");
+  lblBlank = createElement("label", " ");
   lblBlank.parent("navLeft");
 
   restartButton = createButton("Re-initialise Model");
   restartButton.parent("navLeft");
-  restartButton.style('font-size', '16px');
   restartButton.mousePressed(initFractal);
 
-  lblBlank = createP(" ");
-  lblBlank.parent("navLeft");
-  lblBlank = createP(" ");
+  lblBlank = createElement("label", " ");
   lblBlank.parent("navLeft");
 
   saveButton = createButton("Save Image");
   saveButton.parent("navLeft");
-  saveButton.style('font-size', '16px');
   saveButton.mousePressed(saveImage);
-  // saveButton.width()
 
   background(25);
   angleRad = radians(angleDeg);
@@ -196,9 +215,6 @@ function setup() {
   initFractal();
 }
 
-// function updateLength() {
-//   startLength = lengthBox.value();
-// }
 
 
 function saveImage() {
@@ -206,7 +222,6 @@ function saveImage() {
   var txtLeft = "";
   var txtRight = "";
 
-  // textFont(font);
   textSize(fontsize);
   fill(255);
 
@@ -217,15 +232,11 @@ function saveImage() {
   txtLeft += "l: " + startLength + txtSpace;
   text(txtLeft, 20, height - fontsize - 5);
 
-  // text("n: " + genN + "     δ: " + angleDeg + "º     " + "ω: " + axiom + "     l: " + startLength, 20, height - fontsize - 5);
-
   textAlign(RIGHT);
   for (var i = 0; i < rules.length; i++) {
     txtRight += txtSpace + "p" + (i + 1) + ": " + rules[i].a + " → " + rules[i].b;
   }
   text(txtRight, width - 20, height - fontsize - 5);
-
-  // text("p: F → " + rules[0].b, width - 20, height - fontsize - 5)
 
   saveCanvas(canvas, 'fractal', 'jpg');
 

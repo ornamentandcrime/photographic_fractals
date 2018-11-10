@@ -32,10 +32,10 @@
       float: left;
       width: 30%;
 
-      background: rgb(66, 66, 66);
+      background: rgb(37, 37, 37);
       padding: 20px;
       color: white;
-      text-align: center;
+      text-align: left;
 
     }
 
@@ -45,6 +45,12 @@
       padding: 0;
     }
 
+/* Style the list inside the menu */
+form {
+      list-style-type: none;
+      padding: 10;
+    }
+    
     article {
       float: right;
       padding: 20px;
@@ -89,16 +95,58 @@
   <script src="sketch.js"></script>
 
   <header>
-    <h1> L-System Fractal Tree </h1>
+    <h1 id ="turtles">L-System Fractal Tree </h1>
 
   </header>
 
   <section>
+
     <nav>
+      <h2 style="color:green;">
+        Turtle Rulez:
+      </h2>
       <p style="color:green;">
-        Set parameters below and click 're-initialise' to restart the fractal model.
+        'F' = step forward while drawing a line
+        <br>
+        'f' = step forward without drawing a line
+        <br>
+        '+'' = turn left by angle δ
+        <br>
+        '-'' = turn right by angle δ
+        <br>
+        '[' = remember current position
+        <br>
+        ']' = return to reviously remembered position
+        <br><br>
+        "Re-initialise model" after changing parameters
+        <br>
+        Turtles in the title count the "generations" n
+        <br><br>
       </p>
-      <p id="navLeft"> </p>
+      <div id="navLeft" class="settings">
+        <label>Origin x = width *</label>
+        <input id="origX" type="text">
+
+        <label>Origin y = height *</label>
+        <input id="origY" type="text">
+
+        <label>Rotation angle δ</label>
+        <input id="rotAngle" type="text">
+
+        <label>Step length n=0</label>
+        <input id="Length" type="text">
+
+        <label>Step length n+1 *</label>
+        <input id="dimLength" type="text">
+
+        <label>Transparency n+1 *</label>
+        <input id="dimTransp" type="text">
+
+        <label>Axiom ω</label>
+        <input id="axiom" type="text">
+        
+      </div>
+      
 
     </nav>
 
@@ -110,6 +158,9 @@
 
   </section>
 
+  <footer>
+    <p>ornament += crime</p>
+  </footer>
 
 </body>
 
