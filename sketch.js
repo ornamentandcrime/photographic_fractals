@@ -1,15 +1,18 @@
+
 var origX = 0.5;
 var origXInput;
 var origY = 1;
 var origYInput;
-var axiom = "FX";
-var sentence = axiom;
+
+var axiom;
+var sentence;
 var restartButton;
 var saveButton;
 var canvas
 
 var lblAngle;
-var angleDeg = 45;
+
+var angleDeg;
 var angleRad;
 var angleInput;
 
@@ -43,19 +46,95 @@ var fontsize = 10;
 
 var photo;
 
+
+// BRANCHING STRUCTURES
+// --- A ---
+// angleDeg = 25.7;
+// axiom = "F";
+// rules[0] = {
+//   a: "F",
+//   b: "F[+F]F[-F]F"
+// }
+// *********************
+
+
+// BRANCHING STRUCTURES
+// --- B ---
+// angleDeg = 20;
+// axiom = "F";
+// rules[0] = {
+//   a: "F",
+//   b: "F[+F]F[-F][F]"
+// }
+// *********************
+
+
+// BRANCHING STRUCTURES
+// --- C ---
+// angleDeg = 22.5;
+// axiom = "F";
+// rules[0] = {
+//   a: "F",
+//   b: "FF-[-F+F+F]+[+F-F-F]"
+// }
+// *********************
+
+
+// BRANCHING STRUCTURES
+// --- D ---
+// angleDeg = 20;
+// axiom = "X";
+// rules[0] = {
+//   a: "F",
+//   b: "FF"
+// }
+// rules[1] = {
+//   a: "X",
+//   b: "F[+X]F[-X]+X"
+// }
+// *********************
+
+
+// BRANCHING STRUCTURES
+// --- E ---
+// angleDeg = 25.7;
+// axiom = "X";
+// rules[0] = {
+//   a: "F",
+//   b: "FF"
+// }
+// rules[1] = {
+//   a: "X",
+//   b: "F[+X]F[-X]FX"
+// }
+// *********************
+
+
+// BRANCHING STRUCTURES
+// --- F ---
+// angleDeg = 20;
+// axiom = "X";
+// rules[0] = {
+//   a: "F",
+//   b: "FF"
+// }
+// rules[1] = {
+//   a: "X",
+//   b: "F-[[X]+X]+F[+FX]-X"
+// }
+// *********************
+
+
+// QUADRATIC KOCH ISLAND
+// ---------
+angleDeg = 90;
+axiom = "F-F-F-F";  
 rules[0] = {
   a: "F",
-  // b: "FF+[+F-F--F+F]-[-F+F+F--F]"
-  b: "FF"
-  // b: "FF+[+FF-F--F+F]-[-F+F+F--F]"
+  b: "F-F+F+FF-F-F+F"
 }
 
-rules[1] = {
-  a: "X",
-
-  // b: "F-[[X]+X]+F[+FX]-X"
-  b: "F+[[X]-X]-F[-FX]+X"
-}
+//  ***************************************************************************
 
 function preload() {
   // Ensure the .ttf or .otf font stored in the assets directory
@@ -63,7 +142,7 @@ function preload() {
   // font = loadFont('Opus Chords.otf');
 
   // load background image
-  photo = loadImage('images/volker_ketteniss_007.jpg');
+  photo = loadImage('images/L1007083.jpg');
 
 
 }
@@ -142,6 +221,7 @@ function initFractal() {
   startLength = lengthInput.value();
   len = startLength;
   dimLength = dimLenInput.value();
+  dimTransp = dimTranspInput.value();
 
   transp = 255;
 
@@ -223,13 +303,14 @@ function saveImage() {
   var txtRight = "";
 
   textSize(fontsize);
-  fill(255);
+  // fill(255);
+  fill(0,200,0);
 
   textAlign(LEFT);
   txtLeft = "n: " + genN + txtSpace;
   txtLeft += "δ: " + angleDeg + "º" + txtSpace;
   txtLeft += "ω: " + axiom + txtSpace;
-  txtLeft += "l: " + startLength + txtSpace;
+  txtLeft += "d: " + startLength + txtSpace;
   text(txtLeft, 20, height - fontsize - 5);
 
   textAlign(RIGHT);
