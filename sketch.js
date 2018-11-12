@@ -1,4 +1,3 @@
-
 var origX = 0.5;
 var origXInput;
 var origY = 1;
@@ -7,8 +6,13 @@ var origYInput;
 var axiom;
 var sentence;
 var restartButton;
+var generateButton;
+var drawFromGen = 0; // start drawing from n = ...
+var drawGenInput;
 var saveButton;
 var canvas
+
+var turleActive = true;
 
 var lblAngle;
 
@@ -127,12 +131,26 @@ var photo;
 
 // QUADRATIC KOCH ISLAND
 // ---------
+// angleDeg = 90;
+// axiom = "F-F-F-F";  
+// rules[0] = {
+//   a: "F",
+//   b: "F-F+F+FF-F-F+F"
+// }
+// *********************
+
+
+// QUADRATIC KOCH ISLAND 2
+// ---------
 angleDeg = 90;
-axiom = "F-F-F-F";  
+axiom = "F-F-F-F";
 rules[0] = {
   a: "F",
-  b: "F-F+F+FF-F-F+F"
+  b: "F+FF-FF-F-F+F+FF-F-F+F+FF+FF-F"
 }
+// *********************
+
+
 
 //  ***************************************************************************
 
@@ -149,10 +167,15 @@ function preload() {
 
 
 
-function generate() {
+function generate(turtleGo) {
+
   len *= dimLength;
   transp *= dimTransp;
 
+
+  // if (turtleGo) {
+  //   console.log("GOOOOO")
+  // }
 
   if (len > 3) {
     var nextSentence = "";
@@ -179,7 +202,10 @@ function generate() {
 
     sentence = nextSentence;
     createP(sentence);
-    turtle();
+
+    if (genN >= drawFromGen) {
+      turtle();
+    }
   }
 }
 
@@ -234,8 +260,14 @@ function initFractal() {
 
 
   createP(axiom);
-  turtle();
+
   genN = 0;
+  drawFromGen = drawGenInput.value();
+
+  if (genN >= drawFromGen) {
+    turtle();
+  }
+
   turtleCount.html("L-System Fractal Tree ");
 
 }
@@ -282,6 +314,20 @@ function setup() {
   restartButton.parent("navLeft");
   restartButton.mousePressed(initFractal);
 
+  lblBlank = createElement("label", "Start drawing from n = ");
+  lblBlank.parent("navLeft");
+
+  drawGenInput = createInput(drawFromGen);
+  drawGenInput.parent("navLeft");
+  drawGenInput.value(drawFromGen);
+
+  lblBlank = createElement("label", " ");
+  lblBlank.parent("navLeft");
+
+  generateButton = createButton("Generate");
+  generateButton.parent("navLeft");
+  generateButton.mousePressed(generate);
+
   lblBlank = createElement("label", " ");
   lblBlank.parent("navLeft");
 
@@ -289,8 +335,9 @@ function setup() {
   saveButton.parent("navLeft");
   saveButton.mousePressed(saveImage);
 
-  background(25);
+  // background(25);
   angleRad = radians(angleDeg);
+  image(photo, 0, 0, width, height);
 
   initFractal();
 }
@@ -304,7 +351,7 @@ function saveImage() {
 
   textSize(fontsize);
   // fill(255);
-  fill(0,200,0);
+  fill(0, 200, 0);
 
   textAlign(LEFT);
   txtLeft = "n: " + genN + txtSpace;
